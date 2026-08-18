@@ -1,9 +1,10 @@
 use regex::Regex;
 use serde_json::Value;
 use std::collections::HashSet;
-use std::fs;
 use std::io;
 use strsim::jaro_winkler;
+
+const DEFINITIONS_JSON: &str = include_str!("../definitions.json");
 
 fn text_to_wordlist(text: &str) -> Vec<&str> {
     let mut final_worldlist: Vec<&str> = Vec::new();
@@ -18,9 +19,11 @@ fn text_to_wordlist(text: &str) -> Vec<&str> {
     final_worldlist
 }
 
-pub fn get_regexes(file_path: &str) -> Result<Value, io::Error> {
-    let definitions = fs::read_to_string(file_path)?;
-    let rules: serde_json::Value = serde_json::from_slice(definitions.as_bytes())?;
+pub fn get_regexes(_file_path: &str) -> Result<Value, io::Error> {
+    // Rules are embedded at compile time (see DEFINITIONS_JSON) rather than
+    // read from a path relative to the process's current directory, which
+    // is unreliable once the app is packaged.
+    let rules: serde_json::Value = serde_json::from_str(DEFINITIONS_JSON)?;
 
     Ok(rules)
 }

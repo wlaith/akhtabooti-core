@@ -1,69 +1,64 @@
 {
-   "Email": {
-      "regex":"[A-Za-z0-9._+\\-\\']+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}",
-      "region":null,
-      "keywords":null
-   },
-   "Phone Number": {
-      "regex":"((\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}|[0-9]{10}|\\+{1}[0-9 ]{11,15}|[0-9]{4} [0-9]{6})",
-      "region":null,
-      "keywords":[
-         "phone",
-         "telephone",
-         "tel",
-         "contact",
-         "whatsapp",
-         "telegram",
-         "sms"
-      ]
-   },
-   "Banking": {
-     "keywords": ["bank", "bank account", "statement", "ifsc", "branch", "savings", "account number", "amount", "credit", "debit"],
-     "regex": null,
-     "region": null
-   },
-   "Payment Card": {
-      "keywords": [
-          "visa", "mastercard", "amex", "american express", "rupay",
-          "debit card", "credit card", "atm card", "bank", "valid", "expires", "expiry", "thru", "cvv"
+  "Email": {
+    "region": null,
+    "rules": [
+      [{ "regex": "[A-Za-z0-9._+\\-\\']+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}" }]
+    ]
+  },
+  "Phone Number": {
+    "region": null,
+    "rules": [
+      [{ "regex": "^(?:(?:\\+|00)962|0)7[789]\\d{7}$" }],
+      [{ "regex": "^(?:(?:\\+|00)963|0)9\\d{8}$" }]
+    ]
+  },
+  "Jordanian National ID": {
+    "region": "Jordan",
+    "rules": [
+      [{ "regex": "(?:IDJOR)(?:[A-Z0-9<].+)" }],
+      [
+        { "keywords": ["Jordan"] },
+        { "keywords": ["Minitstry of Interior", "Civil Status"] }
       ],
-      "regex": ["\\b(?:\\d{4}[ -]?){3}(?=\\d{4}\\b)(?:\\d{4})"],
-      "region": null
-   },
-   "UUID4": {
-       "regex":"[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}",
-       "region":null,
-       "keywords":null
-   },
-   "Professional Resume": {
-       "regex":null,
-       "region":null,
-       "keywords":[
-         "Experience",
-         "Education",
-         "Skill",
-         "References",
-         "Resume",
-         "Work"
+      [
+        { "keywords": ["ID"] },
+        { "keywords": ["<<"] }
       ]
-   },
-   "Jordanian National ID": {
-      "regex":"(?:IDJOR)(?:[A-Z0-9<].+)",
-      "region":"Jordan",
-      "keywords":[
-         "Jordan",
-         "IDJOR",
-         "<<",
-	 "ID",
-	 "Card"
+    ]
+  },
+  "Jordanian Passport": {
+    "region": "Jordan",
+    "rules": [
+      [{ "regex": "P<JOR[A-Z<]{30,39}" }],
+      [{ "regex": "[A-Z0-9<]{9}[0-9]JOR[0-9]{6}[0-9][MF<][0-9]{6}[0-9]" }],
+      [{ "keywords": ["Passport"] }, { "keywords": ["JOR", "Jordan", "HASHEMITE KINGDOM"] }]
+    ]
+  }, 
+  "Syrian Refugee Document": {
+    "region": "Jordan",
+    "rules": [
+      [
+        { "keywords": ["وزارة العمل", "تصريح عمل"] },
+        { "keywords": ["المملكة الأردنية الهاشمية"] },
+        { "keywords": ["سوري", "سورية", "السورية", "سوريا", "الجمهورية العربية السورية"] }
+      ],
+      [
+        { "keywords": ["وثيقة خدمة"] },
+        { "keywords": ["الجالية السورية"] }
+      ],
+      [
+        { "keywords": ["المملكة الأردنية الهاشمية"] },
+        { "keywords": ["مركز الدخول", "تاريخ الدخول"] },
+        { "keywords": ["مديرية الشرطة"] }
+      ],
+      [
+        { "regex": "\\b\\d{3}-\\d{8}\\b" },
+        { "keywords": ["وثيقة خدمة", "الجالية السورية", "مركز الدخول", "تاريخ الدخول", "مديرية الشرطة"] }
+      ],
+      [
+        { "keywords": ["UNHCR", "المفوضية السامية"] },
+        { "keywords": ["طالب لجوء", "لاجئ", "Asylum Seeker", "Refugee"] }
       ]
-   },
-   "Jordanian Passport": {
-      "regex":"(?:P<JOR)(?:[A-Z0-9<].+)",
-      "region":"Jordan",
-      "keywords":[
-	 "Passport",
-	 "JOR"
-      ]
-   }
+    ]
+}
 }

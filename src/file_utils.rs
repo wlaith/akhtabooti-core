@@ -43,15 +43,14 @@ pub fn is_pdf(file_path: &str) -> bool {
     get_file_type(file_path) == "application/pdf"
 }
 
-pub fn ocr_rec(file_path: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let det_model = "models/PP-OCRv6_small_det.mnn".to_string();
-//    let rec_model = "models/PP-OCRv6_small_rec.mnn".to_string();
-    let rec_model = "models/arabic_PP-OCRv5_mobile_rec_infer.mnn".to_string();
-//    let keys = "models/ppocr_keys_v6_small.txt".to_string();
-    let keys = "models/ppocr_keys_arabic.txt".to_string();
+//embed OCR models at compile time
+const DET_MODEL: &[u8] = include_bytes!("../models/PP-OCRv6_small_det.mnn");
+const REC_MODEL: &[u8] = include_bytes!("../models/arabic_PP-OCRv5_mobile_rec_infer.mnn");
+const KEYS: &[u8] = include_bytes!("../models/ppocr_keys_arabic.txt");
 
+pub fn ocr_rec(file_path: &str) -> Result<String, Box<dyn std::error::Error>> {
     let engine = with_stdout_silenced(|| {
-        OcrEngine::new(det_model, rec_model, keys, None)
+        OcrEngine::from_bytes(DET_MODEL, REC_MODEL, KEYS, None)
    })?;
 
     let image = image::open(file_path)?;
@@ -68,7 +67,7 @@ pub fn ocr_rec(file_path: &str) -> Result<String, Box<dyn std::error::Error>> {
 
 pub fn extract_text(file_path: &str) -> Result<String, io::Error> {
     if is_image(file_path) {
-        let text = ocr_rec(file_path).unwrap();
+        let text = ocr_rec(file_path).map_err(|e| io::Error::other(e.to_string()))?;
         return Ok(text);
     }
 
